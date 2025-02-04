@@ -5,9 +5,11 @@ import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.InteractionDefault;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
+import com.eu.habbo.habbohotel.users.HabboItem;
 import com.skeletor.plugin.javascript.JSPlugin;
 import com.skeletor.plugin.javascript.audio.RoomPlaylist;
 import com.skeletor.plugin.javascript.communication.outgoing.audio.JukeboxComposer;
+import com.skeletor.plugin.javascript.communication.outgoing.audio.JukeboxEndComposer;
 import com.skeletor.plugin.javascript.override_packets.outgoing.JavascriptCallbackComposer;
 
 import java.sql.ResultSet;
@@ -44,6 +46,25 @@ public class InteractionYoutubeJukebox extends InteractionDefault {
             RoomPlaylist roomPlaylist = JSPlugin.getInstance().getRoomAudioManager().getPlaylistForRoom(room.getId());
             JukeboxComposer webComposer = new JukeboxComposer(roomPlaylist);
             client.sendResponse(new JavascriptCallbackComposer(webComposer));
+        }
+    }
+
+    @Override
+    public void onPickUp(Room room) {
+        super.onPickUp(room);
+        boolean shouldStopMusic = true;
+
+        for (HabboItem item : room.getFloorItems()) {
+            if (this.getId() != item.getId()) {
+                if (item.getBaseItem().getInteractionType() == this.getBaseItem().getInteractionType()) {
+                    shouldStopMusic = false;
+                    break;
+                }
+            }
+        }
+
+        if (shouldStopMusic) {
+            room.sendComposer(new JavascriptCallbackComposer(new JukeboxEndComposer(room.getId())).compose());
         }
     }
 }

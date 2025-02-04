@@ -46,9 +46,10 @@
         <dependency>
             <groupId>com.eu.habbo</groupId>
             <artifactId>Habbo</artifactId>
-            <version>3.5.1</version>
+            <version>3.6.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/dependencies/Habbo-3.6.0.jar</systemPath>
         </dependency>
-
         <dependency>
             <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
             <artifactId>owasp-java-html-sanitizer</artifactId>
